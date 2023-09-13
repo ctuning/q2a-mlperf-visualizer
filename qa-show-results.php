@@ -55,6 +55,14 @@ class qa_show_results
                 for($i = 0; $i < count($platforms1); $i++) {
                         array_push($platforms, $platforms1[$i]);
                 }
+		
+		$query = "select distinct concat(accelerator_model_name, ' x ', accelerators_per_node) as device from ^mlcommons_inference_results where accelerators_per_node > 0  order by device";
+                $raw_result = qa_db_query_sub($query);
+                $devices1 = qa_db_read_all_values($raw_result);
+                $devices = array("Select All Devices");
+                for($i = 0; $i < count($devices1); $i++) {
+                        array_push($devices, $devices1[$i]);
+                }
 
 		$categories = array(
 			"0" => "edge",
@@ -118,6 +126,17 @@ class qa_show_results
                                 $platformfilterstring .= implode("','",$selectedplatforms);;
 				$platformfilterstring .= "')";
                         }
+
+			$selected_device_id = qa_post_text('device');;
+                        if(0 == $selected_device_id) {
+                                $devicefilterstring = "";
+                        }
+			else {
+				$device_parts = explode(" x ", $devices[$selected_device_id]);
+				$accelerator_model_name = trim($device_parts[0]);
+				$accelerators_per_node = trim($device_parts[1]);
+                                $devicefilterstring = " and accelerator_model_name = '$accelerator_model_name' and accelerators_per_node = $accelerators_per_node";
+                        }
 		}
 		else {
 			$category = "edge";
@@ -180,7 +199,7 @@ class qa_show_results
 			<script type='text/javascript'>
 var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex;
 </script>";
-		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $platformfilterstring $filter $orderby";
+		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $platformfilterstring $devicefilterstring $filter $orderby";
 		//$query = "select * from ^mlcommons_inference_results where scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $filter $orderbyc";
 		//echo "$query";
 		$raw_result = qa_db_query_sub($query);
@@ -341,13 +360,27 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 		    'options' => $metrics,
 		    'value' => $metric
 		);
+		if(!isset($platformdata)) {
+			$platformdata = "Select All Platforms";
+		}
 
 		$fields[] = array(
                         'label' => 'Filter Platforms',
                         'type'=>'select',
-                        'tags' => "id='platforms' name='platforms[]' class='col' multiple size='40'",
+                        'tags' => "id='platforms' name='platforms[]' class='col' multiple size='30'",
                         'options' => $platforms,
-                        'value' => $plarformdata
+                        'value' => $platformdata
+                );
+		if(!isset($device)) {
+			$device = "Select All Devices";
+		}
+
+		$fields[] = array(
+                        'label' => 'Filter Devices',
+                        'type'=>'select',
+                        'tags' => "id='device' name='device' class='col'",
+                        'options' => $devices,
+                        'value' => $device
                 );
 
 
