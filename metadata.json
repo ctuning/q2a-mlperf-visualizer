@@ -1,0 +1,12 @@
+{
+	"name": "CK Playground MLPerf Inference Visulaizer",
+	"description": "This plugin allows to visualize MLPerf inference results via the CM API",
+	"uri": "https://github.com/arjunsuresh/q2a-payu",
+	"version": "1.0",
+	"date": "2023-09-13",
+	"author": "Arjun Suresh",
+	"author_uri": "http://gateoverflow.in/user/Arjun",
+	"update_uri": "https://raw.githubusercontent.com/arjunsuresh/q2a-payu/master/metadata.json",
+	"license": "GPLv2",
+	"min_q2a": "1.5"
+}
