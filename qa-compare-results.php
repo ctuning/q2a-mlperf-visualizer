@@ -127,7 +127,7 @@ class qa_compare_results
 		$data1 = "$sysversion1: $system1";
 		$data2 = "$sysversion2: $system2";
 		$qa_content['custom_0'] =  "
-                        <script type='text/javascript'>
+			<script type='text/javascript'>
 var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_efficiency = $power_string;
 </script>";
 

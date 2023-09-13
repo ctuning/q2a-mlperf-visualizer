@@ -105,7 +105,7 @@ class qa_show_results
 			$metric = "Performance";
 			$version = "v3.1";
 		}
-	//	$version = "v3.1";
+		//	$version = "v3.1";
 		$charttitlesuffix = " for $model $scenario scenario in $division division $category category";
 
 		if($scenario == "Offline") {
@@ -130,15 +130,15 @@ class qa_show_results
 			$additional_metric_column_name = "Samples per Watt";
 			$chart2title = "Power efficiency $charttitlesuffix";
 			$chart2ytitle= "Samples per Watt";
-		$sortcolumnindex = 7;
+			$sortcolumnindex = 7;
 		}
 		elseif($metric == 'Performance per accelerator') {
 			$filter = " and accelerators_per_node > 0";
 			if($scenario == "Offline") {
-			$additional_metric_column_name = "Performance per accelerator";
-			$chart2title = "Performance per accelerator $charttitlesuffix";
-			$chart2ytitle= "Samples per second per accelerator";
-		$sortcolumnindex = 7;
+				$additional_metric_column_name = "Performance per accelerator";
+				$chart2title = "Performance per accelerator $charttitlesuffix";
+				$chart2ytitle= "Samples per second per accelerator";
+				$sortcolumnindex = 7;
 			}
 
 		}
@@ -147,10 +147,10 @@ class qa_show_results
 			$device_column_name = "Processor";
 			$device_count_column_name = "Total Physical Cores";
 			if($scenario == "Offline") {
-			$additional_metric_column_name = "Performance per core";
-			$chart2title = "Performance per core $charttitlesuffix";
-			$chart2ytitle= "Samples per second per core";
-		$sortcolumnindex = 7;
+				$additional_metric_column_name = "Performance per core";
+				$chart2title = "Performance per core $charttitlesuffix";
+				$chart2ytitle= "Samples per second per core";
+				$sortcolumnindex = 7;
 			}
 
 		}
@@ -264,7 +264,7 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 
 		$qa_content['custom_1'] = '<div id="chartContainer1" class="bgtext" style="height: 370px; width: 100%;"></div>
 <button class="btn btn-primary"  id="printChart1">Download</button>';
-		
+
 		if ($additional_metric_column_name) {
 			$qa_content['custom_2'] = '<div id="chartContainer2" class="bgtext" style="height: 370px; width: 100%;"></div>
 <button class="btn btn-primary"  id="printChart2">Download</button>';
