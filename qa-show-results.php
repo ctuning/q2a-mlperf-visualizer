@@ -47,6 +47,15 @@ class qa_show_results
 		$qa_content=qa_content_prepare();
 		$qa_content['title']=qa_lang_html('visualizer/page_title');
 
+
+		$query = "select distinct concat(version,': ', platform) as platform from ^mlcommons_inference_results order by platform desc";
+                $raw_result = qa_db_query_sub($query);
+                $platforms1 = qa_db_read_all_values($raw_result);
+                $platforms = array("Select All Platforms");
+                for($i = 0; $i < count($platforms1); $i++) {
+                        array_push($platforms, $platforms1[$i]);
+                }
+
 		$categories = array(
 			"0" => "edge",
 			"1" => "datacenter"
@@ -96,6 +105,19 @@ class qa_show_results
 			$metric=$metrics[qa_post_text('metric')];
 			$version=$versions[qa_post_text('version')];
 
+			$selected_platform_ids = $_POST['platforms'];
+                        if(in_array(0, $selected_platform_ids)) {
+                                $platformfilterstring = "";
+                        }
+                        else {
+                                $platformfilterstring = " and platform in ('";
+                                $selectedplatforms = array();
+                                foreach($selected_platform_ids as $platform_id) {
+                                        $selectedplatforms[] = trim(explode(":", $platforms[$platform_id])[1]);
+                                }
+                                $platformfilterstring .= implode("','",$selectedplatforms);;
+				$platformfilterstring .= "')";
+                        }
 		}
 		else {
 			$category = "edge";
@@ -156,10 +178,11 @@ class qa_show_results
 		}
 		$qa_content['custom_0'] =  "
 			<script type='text/javascript'>
-var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', perfsororder = $perfsortorder, sortcolumnindex = $sortcolumnindex;
+var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex;
 </script>";
-		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $filter $orderbyc";
+		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $platformfilterstring $filter $orderby";
 		//$query = "select * from ^mlcommons_inference_results where scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $filter $orderbyc";
+		//echo "$query";
 		$raw_result = qa_db_query_sub($query);
 		$result = qa_db_read_all_assoc($raw_result);
 
@@ -318,6 +341,14 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 		    'options' => $metrics,
 		    'value' => $metric
 		);
+
+		$fields[] = array(
+                        'label' => 'Filter Platforms',
+                        'type'=>'select',
+                        'tags' => "id='platforms' name='platforms[]' class='col' multiple size='40'",
+                        'options' => $platforms,
+                        'value' => $plarformdata
+                );
 
 
 		$qa_content['form']=array(

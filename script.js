@@ -80,7 +80,7 @@ $('table').tablesorter({
     // initial sort order of the columns, example sortList: [[0,0],[1,0]],
     // [[columnIndex, sortDirection], ... ]
     sortList: [
-        [sortcolumnindex, perfsororder],
+        [sortcolumnindex, perfsortorder],
 	    [1,0],
 	    [2,0],
 	    [3,0]

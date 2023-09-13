@@ -71,22 +71,36 @@ class qa_compare_results
 			"2" => "SingleStream",
 			"3" => "MultiStream",
 		);
-		$models = array(
-			"0" => "resnet",
-			"1" => "retinanet",
-			"2" => "bert-99",
-			"3" => "bert-99.9",
-			"4" => "rnnt",
-			"5" => "gptj-99",
-			"6" => "gptj-99.9",
-			"7" => "dlrm_v2-99",
-			"8" => "dlrm_v2-99.9",
-			"9" => "3d-unet-99",
-			"10" => "3d-unet-99.9",
+		$models_all = array(
+			"0" => "All models",
+			"1" => "resnet",
+			"2" => "retinanet",
+			"3" => "bert-99",
+			"4" => "bert-99.9",
+			"5" => "rnnt",
+			"6" => "gptj-99",
+			"7" => "gptj-99.9",
+			"8" => "dlrm_v2-99",
+			"9" => "dlrm_v2-99.9",
+			"10" => "3d-unet-99",
+			"11" => "3d-unet-99.9",
 		);
 
 		if (qa_clicked('okthen'))
 		{
+			$selected_model_ids = $_POST['models'];
+			if(in_array(0, $selected_model_ids)) {
+				$modelfilterstring = "";
+			}
+			else {
+				$modelfilterstring = " and mlperfmodel in ('";
+				$selectedmodels = array();
+				foreach($selected_model_ids as $model_id) {
+					$selectedmodels[] = $models_all[$model_id];
+				}
+				$modelfilterstring .= implode("','",$selectedmodels);;
+				$modelfilterstring .= "')";
+			}
 			/*PROCESS!!!!!!*/
 			$system1=$platforms[qa_post_text('system1')];
 			$system2=$platforms[qa_post_text('system2')];
@@ -105,11 +119,12 @@ class qa_compare_results
 			$sysversion2 = "v3.1";
 		}
 		$scenario="offline";
-		$query = "select * from ^mlcommons_inference_results where platform = '$system1' and scenario='$scenario' and version='$sysversion1'"; //and division='$division' and mlperfmodel='$model' and systemtype like '%$category%'";
+
+		$query = "select * from ^mlcommons_inference_results where platform = '$system1' and scenario='$scenario' and version='$sysversion1' $modelfilterstring"; //and division='$division' and mlperfmodel='$model' and systemtype like '%$category%'";
 		$raw_result = qa_db_query_sub($query);
 		$result1 = qa_db_read_all_assoc($raw_result);
 
-		$query = "select * from ^mlcommons_inference_results where platform = '$system2' and scenario='$scenario' and version='$sysversion2'"; //and division='$division' and mlperfmodel='$model' and systemtype like '%$category%'";
+		$query = "select * from ^mlcommons_inference_results where platform = '$system2' and scenario='$scenario' and version='$sysversion2' $modelfilterstring"; //and division='$division' and mlperfmodel='$model' and systemtype like '%$category%'";
 		$raw_result = qa_db_query_sub($query);
 		$result2 = qa_db_read_all_assoc($raw_result);
 
@@ -128,7 +143,7 @@ class qa_compare_results
 		$data2 = "$sysversion2: $system2";
 		$qa_content['custom_0'] =  "
 			<script type='text/javascript'>
-var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_efficiency = $power_string;
+var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_efficiency = $power_string, sortcolumnindex=4, perfsortorder=1;
 </script>";
 
 		//print_r($result2);
@@ -267,15 +282,6 @@ var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_e
 		$html2 .= '<div id="chartContainer2" class="bgtext" style="height: 370px; width: 100%;"></div>';
 		$html2 .= '<div id="chartContainer3" class="bgtext" style="height: 370px; width: 100%;"></div>';
 
-		$chartdata = array();
-		foreach ($result as $row) {
-			if (!$row['power_result']) continue;
-			array_push($chartdata, array(
-				'x' => floatval($row['performance_result']),
-				'y' => floatval($row['power_result']),
-				'label' => $row['Location']
-			));
-		}
 		$qa_content['custom_1'] = '
 			<div id="chartContainer1" class="bgtext" style="height: 370px; width: 100%;"></div>
 			<button class="btn btn-primary"  id="printChart1">Download</button>';
@@ -295,19 +301,46 @@ var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_e
 		$user_level = qa_get_logged_in_level();
 		$ok = null;
 		$fields = array();
+		/*$systemshtml = "<select name='systems[]' class='col' multiple>\n";
+		foreach ($platforms as $key=> $value){
+			$systemshtml .= "<option value='$key'>$value</option>\n";
+		}
+		$systemshtml .= "</select>";
+
+		$modelshtml = "<select name='models' class='col' multiple>\n";
+		foreach ($models as $key=> $value){
+			$modelshtml .= "<option value='$key'>$value</option>\n";
+		}
+		$modelshtml .= "</select>";
+		 */
+		/*$fields[] = array(
+			'label' => 'Systems',
+			'type'=>'custom',
+			'html' => $systemshtml,
+		);*/
 		$fields[] = array(
 			'label' => 'System 1',
 			'type'=>'select',
-			'tags' => "id='system1' name='system1' class='col' multiple",
+			'tags' => "id='system1' name='system1' class='col'",
 			'options' => $platforms,
 			'value' => $data1
 		);
 		$fields[] = array(
 			'label' => 'System 2',
 			'type'=>'select',
-			'tags' => "id='system2' name='system2' class='col' multiple",
+			'tags' => "id='system2' name='system2' class='col'",
 			'options' => $platforms,
 			'value' => $data2
+		);
+		if(!isset($modelsdata)) {
+			$modelsdata = "All models";
+		}
+		$fields[] = array(
+			'label' => 'Models',
+			'type'=>'select',
+			'tags' => "id='models' name='models[]' class='col' multiple",
+			'options' => $models_all,
+			'value' => $modelsdata
 		);
 
 

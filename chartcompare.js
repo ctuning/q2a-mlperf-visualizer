@@ -87,8 +87,11 @@ function drawCompareCharts() {
 		axisX:{
 			intervalType: String,
 			valueFormatString: " ",
+			labelAngle: 0,
+                        labelTextAlign: "center",
+			labelMaxWidth: 60,
 			labelFormatter: function(e) {
-				return (""+e.label).substring(0,25);
+				return (""+e.label).substring(0,75);
 			},
 		},
 		axisY: {
@@ -127,8 +130,11 @@ chart2 = new CanvasJS.Chart("chartContainer2", {
 	axisX:{
 		intervalType: String,
 		valueFormatString: " ",
+			labelAngle: 0,
+                        labelTextAlign: "center",
+			labelMaxWidth: 60,
 		labelFormatter: function(e) {
-			return (""+e.label).substring(0,25);
+			return (""+e.label).substring(0,75);
 		},
 	},
 	axisY: {
@@ -170,8 +176,11 @@ chart3 = new CanvasJS.Chart("chartContainer3", {
 	axisX:{
 		intervalType: String,
 		valueFormatString: " ",
+			labelAngle: 0,
+                        labelTextAlign: "center",
+			labelMaxWidth: 60,
 		labelFormatter: function(e) {
-			return (""+e.label).substring(0,25);
+			return (""+e.label).substring(0,75);
 		},
 	},
 	axisY: {
