@@ -1,2 +1,2 @@
-# q2a-payu
-Plugin to receive payments via Payu Money 
+# q2a-mlperf-visualizer
+Plugin to visualize MLPerf inference results via CK playground
