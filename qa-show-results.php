@@ -49,20 +49,20 @@ class qa_show_results
 
 
 		$query = "select distinct concat(version,': ', platform) as platform from ^mlcommons_inference_results order by platform desc";
-                $raw_result = qa_db_query_sub($query);
-                $platforms1 = qa_db_read_all_values($raw_result);
-                $platforms = array("Select All Platforms");
-                for($i = 0; $i < count($platforms1); $i++) {
-                        array_push($platforms, $platforms1[$i]);
-                }
-		
+		$raw_result = qa_db_query_sub($query);
+		$platforms1 = qa_db_read_all_values($raw_result);
+		$platforms = array("Select All Platforms");
+		for($i = 0; $i < count($platforms1); $i++) {
+			array_push($platforms, $platforms1[$i]);
+		}
+
 		$query = "select distinct concat(accelerator_model_name, ' x ', accelerators_per_node) as device from ^mlcommons_inference_results where accelerators_per_node > 0  order by device";
-                $raw_result = qa_db_query_sub($query);
-                $devices1 = qa_db_read_all_values($raw_result);
-                $devices = array("Select All Devices");
-                for($i = 0; $i < count($devices1); $i++) {
-                        array_push($devices, $devices1[$i]);
-                }
+		$raw_result = qa_db_query_sub($query);
+		$devices1 = qa_db_read_all_values($raw_result);
+		$devices = array("Select All Devices");
+		for($i = 0; $i < count($devices1); $i++) {
+			array_push($devices, $devices1[$i]);
+		}
 
 		$categories = array(
 			"0" => "edge",
@@ -115,31 +115,31 @@ class qa_show_results
 
 			$selected_platform_ids = $_POST['platforms'];
 			$platformdata = array();
-                        if(in_array(0, $selected_platform_ids)) {
-                                $platformfilterstring = "";
-                        }
-                        else {
-                                $platformfilterstring = " and platform in ('";
-                                $selectedplatforms = array();
-                                foreach($selected_platform_ids as $platform_id) {
+			if(in_array(0, $selected_platform_ids)) {
+				$platformfilterstring = "";
+			}
+			else {
+				$platformfilterstring = " and platform in ('";
+				$selectedplatforms = array();
+				foreach($selected_platform_ids as $platform_id) {
 					array_push($platformdata, $platforms[$platform_id]);
-                                        $selectedplatforms[] = trim(explode(":", $platforms[$platform_id])[1]);
-                                }
-                                $platformfilterstring .= implode("','",$selectedplatforms);;
+					$selectedplatforms[] = trim(explode(":", $platforms[$platform_id])[1]);
+				}
+				$platformfilterstring .= implode("','",$selectedplatforms);;
 				$platformfilterstring .= "')";
-                        }
+			}
 
 			$selected_device_id = qa_post_text('device');;
-                        if(0 == $selected_device_id) {
-                                $devicefilterstring = "";
-                        }
+			if(0 == $selected_device_id) {
+				$devicefilterstring = "";
+			}
 			else {
 				$device = $devices[$selected_device_id];
 				$device_parts = explode(" x ", $device);
 				$accelerator_model_name = trim($device_parts[0]);
 				$accelerators_per_node = trim($device_parts[1]);
-                                $devicefilterstring = " and accelerator_model_name = '$accelerator_model_name' and accelerators_per_node = $accelerators_per_node";
-                        }
+				$devicefilterstring = " and accelerator_model_name = '$accelerator_model_name' and accelerators_per_node = $accelerators_per_node";
+			}
 		}
 		else {
 			$category = "edge";
@@ -176,6 +176,7 @@ class qa_show_results
 			$chart2title = "Power efficiency $charttitlesuffix";
 			$chart2ytitle= "Samples per Watt";
 			$sortcolumnindex = 7;
+			$perfsortorder = 1;
 		}
 		elseif($metric == 'Performance per accelerator') {
 			$filter = " and accelerators_per_node > 0";
@@ -280,7 +281,12 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 			$html .= "<td class='performance' title='$performance_title'>". $row['performance_result']. "</td>";
 			if ($additional_metric_column_name) {
 				if($metric == "Power efficiency") {
+					if($scenario == "Offline" || $scenario == "Server")
 					$power_efficiency = round($row['performance_result']/$row['power_result'], 2);
+					elseif($scenario == "SingleStream")
+					$power_efficiency = round(1000/$row['power_result'], 2);
+					elseif($scenario == "MultiStream")
+					$power_efficiency = round(8000/$row['power_result'], 2);
 					$html .= "<td class='power' title='Total Watts: ". $row['power_result']. "'>". $power_efficiency  ."</td>";
 				}
 				elseif($metric == "Performance per accelerator") {
@@ -384,23 +390,23 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 		$platformdata = "Select All Platforms";
 
 		$fields[] = array(
-                        'label' => 'Filter Platforms',
-                        'type'=>'select',
-                        'tags' => "id='platforms' name='platforms[]' class='col' multiple size='30'",
-                        'options' => $platforms,
-                        'value' => $platformdata
-                );
+			'label' => 'Filter Platforms',
+			'type'=>'select',
+			'tags' => "id='platforms' name='platforms[]' class='col' multiple size='30'",
+			'options' => $platforms,
+			'value' => $platformdata
+		);
 		if(!isset($device)) {
 			$device = "Select All Devices";
 		}
 
 		$fields[] = array(
-                        'label' => 'Filter Devices',
-                        'type'=>'select',
-                        'tags' => "id='device' name='device' class='col'",
-                        'options' => $devices,
-                        'value' => $device
-                );
+			'label' => 'Filter Devices',
+			'type'=>'select',
+			'tags' => "id='device' name='device' class='col'",
+			'options' => $devices,
+			'value' => $device
+		);
 
 
 		$qa_content['form']=array(
