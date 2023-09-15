@@ -117,6 +117,13 @@ function drawPerfCharts() {
 		title: {
 			text: chart1title
 		},
+		subtitles: [{
+    text: "Powered by CK Playground",
+    fontSize: 40,
+    verticalAlign: "center",
+    dockInsidePlotArea: true,
+    fontColor: "rgba(0,0,0,0.1)"
+}],
 		legend: {
 			cursor: "pointer",
 			//itemclick: toggleDataSeries,
@@ -145,6 +152,13 @@ function drawPerfCharts() {
 		title: {
 			text: chart2title
 		},
+		subtitles: [{
+    text: "Powered by CK Playground",
+    fontSize: 40,
+    verticalAlign: "center",
+    dockInsidePlotArea: true,
+    fontColor: "rgba(0,0,0,0.1)"
+}],
 		legend: {
 			cursor: "pointer",
 			//itemclick: toggleDataSeries,

@@ -114,8 +114,8 @@ class qa_compare_results
 		}
 		else {
 			$system1 = "L4x1_TRT";
-			$system2 = "r282_z93_q8e";
-			$sysversion1 = "v3.1";
+			$system2 = "L4x1_TRT";
+			$sysversion1 = "v3.0";
 			$sysversion2 = "v3.1";
 		}
 		$scenario="offline";
@@ -274,7 +274,7 @@ var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_e
 			</select>
 			<select class="gotoPage" title="Select page number"></select>
 			</div>';
-		$qa_content['custom'] = $html;
+		$qa_content['custom_100'] = $html;
 
 		$resultjson = json_encode($result);
 		$html2 = '<div id="chartContainer" style="height: 370px; width: 100%;"></div>';
@@ -282,11 +282,11 @@ var data1 = '$data1', data2 = '$data2', draw_power = $power_string, draw_power_e
 		$html2 .= '<div id="chartContainer2" class="bgtext" style="height: 370px; width: 100%;"></div>';
 		$html2 .= '<div id="chartContainer3" class="bgtext" style="height: 370px; width: 100%;"></div>';
 
-		$qa_content['custom_1'] = '
+		$qa_content['custom_101'] = '
 			<div id="chartContainer1" class="bgtext" style="height: 370px; width: 100%;"></div>
 			<button class="btn btn-primary"  id="printChart1">Download</button>';
 		if($is_power) {
-		$qa_content['custom_1'] .= '
+		$qa_content['custom_101'] .= '
 
 			<div id="chartContainer2" class="bgtext" style="height: 370px; width: 100%;"></div>
 			<button class="btn btn-primary"  id="printChart2">Download</button>

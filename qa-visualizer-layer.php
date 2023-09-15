@@ -20,11 +20,11 @@ class qa_html_theme_layer extends qa_html_theme_base {
 
 <script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
  <style>
-        .bgtext {
+        .bgtext1 {
             position: relative;
         }
   
-        .bgtext:after {
+        .bgtext1:after {
             margin: 8rem;
             content: "CK Playground";
             position: absolute;
