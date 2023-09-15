@@ -114,6 +114,7 @@ class qa_show_results
 			$version=$versions[qa_post_text('version')];
 
 			$selected_platform_ids = $_POST['platforms'];
+			$platformdata = array();
                         if(in_array(0, $selected_platform_ids)) {
                                 $platformfilterstring = "";
                         }
@@ -121,6 +122,7 @@ class qa_show_results
                                 $platformfilterstring = " and platform in ('";
                                 $selectedplatforms = array();
                                 foreach($selected_platform_ids as $platform_id) {
+					array_push($platformdata, $platforms[$platform_id]);
                                         $selectedplatforms[] = trim(explode(":", $platforms[$platform_id])[1]);
                                 }
                                 $platformfilterstring .= implode("','",$selectedplatforms);;
@@ -132,7 +134,8 @@ class qa_show_results
                                 $devicefilterstring = "";
                         }
 			else {
-				$device_parts = explode(" x ", $devices[$selected_device_id]);
+				$device = $devices[$selected_device_id];
+				$device_parts = explode(" x ", $device);
 				$accelerator_model_name = trim($device_parts[0]);
 				$accelerators_per_node = trim($device_parts[1]);
                                 $devicefilterstring = " and accelerator_model_name = '$accelerator_model_name' and accelerators_per_node = $accelerators_per_node";
@@ -162,6 +165,7 @@ class qa_show_results
 		$device_column_name = "Device";
 		$device_count_column_name = "Devices per node";
 		$sortcolumnindex = 6;
+		$perfcolumnindex = 7; //starting from 1
 		if($metric == 'Performance') {
 			$filter = "";
 			$additional_metric_column_name = "";
@@ -195,9 +199,17 @@ class qa_show_results
 			}
 
 		}
+		if($division == "open") {
+			$sortcolumnindex++;
+			$perfcolumnindex++;
+			$openmodel = "true";
+		}
+		else{
+			$openmodel = "false";
+		}
 		$qa_content['custom_0'] =  "
 			<script type='text/javascript'>
-var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex;
+var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex, perfcolumnindex = $perfcolumnindex, openmodel=$openmodel, model='$model';
 </script>";
 		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $platformfilterstring $devicefilterstring $filter $orderby";
 		//$query = "select * from ^mlcommons_inference_results where scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $filter $orderbyc";
@@ -227,8 +239,11 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 			<th>System</th>
 			<th>$device_column_name</th>
 			<th>$device_count_column_name</th>
-			<th>Framework</th>
-			<th>Performance</th>";
+			<th>Framework</th>";
+		if($division == "open") {
+			$theader .= "<th> Model </th>";
+		}
+		$theader .= "<th>Performance</th>";
 		if($additional_metric_column_name) {
 			$theader .= "<th>$additional_metric_column_name</th>";
 		}
@@ -259,6 +274,9 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 			$html .= "<td>". $row['accelerators_per_node']. "</td>";
 			}
 			$html .= "<td>". $row['framework']. "</td>";
+			if($division == "open") {
+				$html .= "<td>". $row['model']. "</td>";
+			}
 			$html .= "<td class='performance' title='$performance_title'>". $row['performance_result']. "</td>";
 			if ($additional_metric_column_name) {
 				if($metric == "Power efficiency") {
@@ -360,9 +378,10 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 		    'options' => $metrics,
 		    'value' => $metric
 		);
-		if(!isset($platformdata)) {
+		if(!isset($platformdata) || false) {
 			$platformdata = "Select All Platforms";
 		}
+		$platformdata = "Select All Platforms";
 
 		$fields[] = array(
                         'label' => 'Filter Platforms',
