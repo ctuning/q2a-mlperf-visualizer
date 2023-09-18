@@ -210,7 +210,7 @@ function drawCompareCharts() {
 					crosshair: {
 						enabled: true
 					},
-					title: "Samples per Watt",
+					title: "Samples per Joule",
 				},
 				data: [
 					{

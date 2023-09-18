@@ -172,9 +172,9 @@ class qa_show_results
 		}
 		elseif($metric == 'Power efficiency') {
 			$filter = " and power_result > 0";
-			$additional_metric_column_name = "Samples per Watt";
+			$additional_metric_column_name = "Samples per Joule";
 			$chart2title = "Power efficiency $charttitlesuffix";
-			$chart2ytitle= "Samples per Watt";
+			$chart2ytitle= "Samples per Joule";
 			$sortcolumnindex = 7;
 			$perfsortorder = 1;
 		}
