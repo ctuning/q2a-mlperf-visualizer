@@ -18,7 +18,7 @@ class qa_html_theme_layer extends qa_html_theme_base {
 <script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'tablesorter-master/dist/js/extras/jquery.tablesorter.pager.min.js"></script>
 
 
-<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+<script src="'.QA_HTML_THEME_LAYER_URLTOROOT.'js/jquery.canvasjs.min.js"></script>
  <style>
         .bgtext1 {
             position: relative;
@@ -52,20 +52,20 @@ function body_suffix()
 	$version = '1.13a91v9g5'.strtotime("now");
 		if($url == 'show-results'){
 			$this->output('
-<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'chartperf.js?version='.$version.'"></script>
+<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'js/chartperf.js?version='.$version.'"></script>
 <script type="text/javascript">
 var drawCharts = drawPerfCharts;
 </script>
-<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'script.js?version='.$version.'"></script>
+<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'js/script.js?version='.$version.'"></script>
 ');
 	}
 		if($url == 'compare-results'){
 			$this->output('
-<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'chartcompare.js?version='.$version.'"></script>
+<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'js/chartcompare.js?version='.$version.'"></script>
 <script type="text/javascript">
 var drawCharts = drawCompareCharts;
 </script>
-<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'script.js?version='.$version.'"></script>
+<script type="text/javascript" src="'.QA_HTML_THEME_LAYER_URLTOROOT.'js/script.js?version='.$version.'"></script>
 ');
 	}
 }
