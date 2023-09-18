@@ -9,7 +9,7 @@ function drawCompareCharts() {
 		var scenario = scenarios[scenario_id];
 
 		var tableid = "#results_"+scenario;
-		if(!$(tableid)) continue;
+		if(!($(tableid).length)) continue;
 		$(tableid +" tbody tr td:nth-child(1)").each( function(){
 			if (!($(this).is(":hidden")) ) {
 				models.push( $(this).text() );
@@ -235,6 +235,7 @@ function drawCompareCharts() {
 
 for( scenario_id in scenarios) {
 	var scenario = scenarios[scenario_id];
+	if(! $("#printChart"+scenario+"1").length) continue;
 	document.getElementById("printChart"+scenario+"1").addEventListener("click",function(){
 		chart1.exportChart({format: "png"});
 	}); 
