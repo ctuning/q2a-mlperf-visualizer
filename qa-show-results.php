@@ -152,16 +152,22 @@ class qa_show_results
 		//	$version = "v3.1";
 		$charttitlesuffix = " for $model $scenario scenario in $division division $category category";
 
-		if($scenario == "Offline") {
+		if(($scenario == "Offline") || ($scenario == "Server")) {
+			$chart1ytitle = "Samplpes per second";
 			$sortorder = "desc";
 			$perfsortorder = 1;
 		}
 		else {
 			$sortorder = "asc";
 			$perfsortorder = 0;
+			if($scenario == "SingleStream") {
+				$chart1ytitle = "Latency per sample";
+			}
+			elseif($scenario == "MultiStream") {
+				$chart1ytitle = "Latency per query of 8 samples";
+			}
 		}
 		$orderby = " order by performance_result $sortorder";
-		$chart1ytitle = "Samples per second";
 		$device_column_name = "Device";
 		$device_count_column_name = "Devices per node";
 		$sortcolumnindex = 6;
