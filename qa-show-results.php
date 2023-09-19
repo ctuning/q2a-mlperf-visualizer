@@ -207,8 +207,8 @@ class qa_show_results
 
 		}
 		if($division == "open") {
-			$sortcolumnindex++;
-			$perfcolumnindex++;
+			$sortcolumnindex+=2;
+			$perfcolumnindex+=2;
 			$openmodel = "true";
 		}
 		else{
@@ -216,7 +216,7 @@ class qa_show_results
 		}
 		$qa_content['custom_0'] =  "
 			<script type='text/javascript'>
-var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex, perfcolumnindex = $perfcolumnindex, openmodel=$openmodel, model='$model';
+var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart3title = 'Accuracy vs Performance', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', chart3ytitle = 'Performance', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex, perfcolumnindex = $perfcolumnindex, openmodel=$openmodel, model='$model';
 </script>";
 		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $platformfilterstring $devicefilterstring $filter $orderby";
 		//$query = "select * from ^mlcommons_inference_results where scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $filter $orderbyc";
@@ -249,6 +249,7 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 			<th>Framework</th>";
 		if($division == "open") {
 			$theader .= "<th> Model </th>";
+			$theader .= "<th> Accuracy </th>";
 		}
 		$theader .= "<th>Performance</th>";
 		if($additional_metric_column_name) {
@@ -283,6 +284,7 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 			$html .= "<td>". $row['framework']. "</td>";
 			if($division == "open") {
 				$html .= "<td>". $row['model']. "</td>";
+				$html .= "<td>". $row['accuracy']. "</td>";
 			}
 			$html .= "<td class='performance' title='$performance_title'>". $row['performance_result']. "</td>";
 			if ($additional_metric_column_name) {
@@ -340,6 +342,10 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 		if ($additional_metric_column_name) {
 			$qa_content['custom_2'] = '<div id="chartContainer2" class="bgtext" style="height: 370px; width: 100%;"></div>
 <button class="btn btn-primary"  id="printChart2">Download</button>';
+		}
+		if ($openmodel) {
+			$qa_content['custom_3'] = '<div id="chartContainer3" class="bgtext" style="height: 370px; width: 100%;"></div>
+<button class="btn btn-primary"  id="printChart3">Download</button>';
 		}
 
 		//$qa_content['custom_9'] = $html2;
