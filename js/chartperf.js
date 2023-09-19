@@ -186,13 +186,17 @@ function drawPerfCharts() {
 
 }
 
-for(i=1; i<= 2; i++) {
-	if(document.getElementById("printChart"+i)) {
-		document.getElementById("printChart"+i).addEventListener("click",function(){
+	if(document.getElementById("printChart1")) {
+		document.getElementById("printChart1").addEventListener("click",function(){
 			chart1.exportChart({format: "png"});
 		});
 	}
-}
+	if(document.getElementById("printChart2")) {
+		document.getElementById("printChart2").addEventListener("click",function(){
+			chart2.exportChart({format: "png"});
+		});
+	}
+
 
 
 $( document ).on( "click", "athead th", function() {
