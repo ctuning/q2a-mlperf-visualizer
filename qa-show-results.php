@@ -153,7 +153,7 @@ class qa_show_results
 		$charttitlesuffix = " for $model $scenario scenario in $division division $category category";
 
 		if(($scenario == "Offline") || ($scenario == "Server")) {
-			$chart1ytitle = "Samplpes per second";
+			$chart1ytitle = "Samples per second";
 			$sortorder = "desc";
 			$perfsortorder = 1;
 		}
@@ -216,7 +216,7 @@ class qa_show_results
 		}
 		$qa_content['custom_0'] =  "
 			<script type='text/javascript'>
-var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart3title = 'Accuracy vs Performance', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', chart3ytitle = 'Performance', perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex, perfcolumnindex = $perfcolumnindex, openmodel=$openmodel, model='$model';
+var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title', chart3title = 'Accuracy vs Performance', chart1ytitle = '$chart1ytitle', chart2ytitle = '$chart2ytitle', chart3ytitle = 'Accuracy', chart3xtitle = chart1ytitle, perfsortorder = $perfsortorder, sortcolumnindex = $sortcolumnindex, perfcolumnindex = $perfcolumnindex, openmodel=$openmodel, model='$model';
 </script>";
 		$query = "select * from ^mlcommons_inference_results where version = '$version' and scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $platformfilterstring $devicefilterstring $filter $orderby";
 		//$query = "select * from ^mlcommons_inference_results where scenario = '$scenario' and division='$division' and mlperfmodel='$model' and systemtype like '%$category%' $filter $orderbyc";

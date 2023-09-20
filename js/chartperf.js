@@ -88,7 +88,8 @@ function drawPerfCharts() {
 			}
 			if(accuracy[i]) {
 				var datap3 = structuredClone(datap);
-				datap3['x'] = parseFloat(accuracy[i]);
+				datap3['x'] = datap3['y'];
+				datap3['y'] = parseFloat(accuracy[i]);
 				datap3['label'] += ","+models[i];
 				datap3['name'] += ","+models[i];
 				datap3['indexLabeli'] = datap3['x'];
@@ -223,6 +224,7 @@ function drawPerfCharts() {
 				//itemclick: toggleDataSeries,
 			},
 			axisX:{
+				title: chart3xtitle,
 			},
 			axisY: {
 				crosshair: {
