@@ -343,7 +343,7 @@ var chart1title = 'Performance $charttitlesuffix', chart2title = '$chart2title',
 			$qa_content['custom_2'] = '<div id="chartContainer2" class="bgtext" style="height: 370px; width: 100%;"></div>
 <button class="btn btn-primary"  id="printChart2">Download</button>';
 		}
-		if ($openmodel) {
+		if ($openmodel == "true") {
 			$qa_content['custom_3'] = '<div id="chartContainer3" class="bgtext" style="height: 370px; width: 100%;"></div>
 <button class="btn btn-primary"  id="printChart3">Download</button>';
 		}
