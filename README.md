@@ -5,9 +5,8 @@ Plugin to visualize MLPerf inference results via CK playground.
 # Copyright
 
 Copyright © 2023 cTuning Foundation
-All rights reserved
 
-# License
+All rights reserved
 
 Contact the [cTuning foundation](mailto:admin@ctuning.org).
 
